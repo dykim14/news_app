@@ -9,20 +9,37 @@ class NewsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("articles=" + articles.length.toString());
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
       ),
       itemBuilder: (context, index) {
         var article = articles[index];
-        print("article index=" + index.toString());
         return GridTile(
-            child: Container(
-              child: CachedNetworkImage(
-                imageUrl: article.imageUrl ?? "",
-              ),
-            )
+          child: Container(
+            child: CachedNetworkImage(
+              imageUrl: article.imageUrl ?? "",
+              imageBuilder:  (context, imageProvider) {
+                return Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                    )
+                  ),
+                );
+              },
+              errorWidget: (context, url, error) {
+                return Container(
+
+                )
+              },
+              placeholder: (context, url) {
+                return Center(child: CircularProgressIndicator(),);
+              },
+            ),
+          )
         );
       },
       itemCount: this.articles.length,
